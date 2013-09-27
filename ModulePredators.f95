@@ -11,7 +11,7 @@
 !------------------------------------------------------------------------------
 !
 !This program is free software; you can redistribute it and/or
-!modify it under the terms of the GNU General Public License 
+!modify it under the terms of the GNU General Public License
 !version 2, as published by the Free Software Foundation.
 !
 !This program is distributed in the hope that it will be useful,
@@ -24,26 +24,26 @@
 !Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 !
 !------------------------------------------------------------------------------
- 
+
 Module ModulePredators
 
     implicit none
 
     !Types---------------------------------------------------------------------
-    
+
     public :: T_Predators
     type      T_Predators
         private
         real(8), pointer :: PopulationSize
         !Population is computed every time step
-        
+
         real(8), pointer :: IncreaseRate
         real(8), pointer :: DecreaseRate
     end type  T_Predators
 
     !--------------------------------------------------------------------------
 
-    private 
+    private
 
     !Subroutines---------------------------------------------------------------
 
@@ -57,21 +57,21 @@ Module ModulePredators
     public  :: GetPredatorsPopulationSize
     public  :: GetPredatorsIncreaseRate
     public  :: GetPredatorsDecreaseRate
-                         
+
     !Modifier
     public  :: ModifyPredatorsPopulation
     private ::      Death
     private ::      Increase
 
     !Destructor
-    public  :: KillPredators                                                    
+    public  :: KillPredators
     private ::      DeAllocateInstance
     public  :: PredatorsGarbageCollector
-    
+
     !Interfaces----------------------------------------------------------------
 
     !--------------------------------------------------------------------------
-    
+
     contains
 
 
@@ -83,13 +83,13 @@ Module ModulePredators
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    function ConstructPredators(IniPopulation, IncreaseRate, DecreaseRate) 
+    pure function ConstructPredators(IniPopulation, IncreaseRate, DecreaseRate)
 
         !Arguments---------------------------------------------------------------
         real(8), intent(IN)                             :: IniPopulation
         real(8), intent(IN)                             :: IncreaseRate
         real(8), intent(IN)                             :: DecreaseRate
-        
+
         !Return------------------------------------------------------------------
         type (T_Predators), pointer                          :: ConstructPredators
 
@@ -106,14 +106,14 @@ Module ModulePredators
         !----------------------------------------------------------------------
 
     end function ConstructPredators
- 
+
     !--------------------------------------------------------------------------
-    
-    subroutine AllocateInstance(NewObjPredators)
+
+    pure subroutine AllocateInstance(NewObjPredators)
 
         !Arguments-------------------------------------------------------------
         type (T_Predators), pointer                          :: NewObjPredators
-                                                    
+
         !Local-----------------------------------------------------------------
 
         !Allocates new instance
@@ -123,17 +123,17 @@ Module ModulePredators
         allocate (NewObjPredators%DecreaseRate)
 
     end subroutine AllocateInstance
- 
+
     !--------------------------------------------------------------------------
-    
-    subroutine InitializeValues(NewObjPredators, IniPopulation, IncreaseRate, DecreaseRate)
+
+    pure subroutine InitializeValues(NewObjPredators, IniPopulation, IncreaseRate, DecreaseRate)
 
         !Arguments-------------------------------------------------------------
         type (T_Predators), pointer                     :: NewObjPredators
         real(8), intent(IN)                             :: IniPopulation
         real(8), intent(IN)                             :: IncreaseRate
         real(8), intent(IN)                             :: DecreaseRate
-                                                    
+
         !Local-----------------------------------------------------------------
 
         NewObjPredators%PopulationSize = IniPopulation
@@ -143,13 +143,13 @@ Module ModulePredators
     end subroutine InitializeValues
 
     !--------------------------------------------------------------------------
-    
-    function AllocateReplica(ObjPredators) 
+
+    function AllocateReplica(ObjPredators)
 
 
         !Arguments-------------------------------------------------------------
         type (T_Predators), pointer                               :: ObjPredators
-                                                    
+
         !Return----------------------------------------------------------------
         type (T_Predators), pointer                               :: AllocateReplica
 
@@ -160,7 +160,7 @@ Module ModulePredators
         !Allocates new values
         allocate (NewObjPredators)
         allocate (NewObjPredators%PopulationSize)
-        
+
         NewObjPredators%PopulationSize = -99999.9
         !New value
 
@@ -182,11 +182,11 @@ Module ModulePredators
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    
+
 
     !--------------------------------------------------------------------------
-    
-    function GetPredatorsPopulationSize (ObjPredators)
+
+    pure function GetPredatorsPopulationSize (ObjPredators)
 
         !Arguments-------------------------------------------------------------
         type (T_Predators), pointer                          :: ObjPredators
@@ -199,10 +199,10 @@ Module ModulePredators
         GetPredatorsPopulationSize = ObjPredators%PopulationSize
 
     end function GetPredatorsPopulationSize
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetPredatorsIncreaseRate (ObjPredators)
+
+    pure function GetPredatorsIncreaseRate (ObjPredators)
 
         !Arguments-------------------------------------------------------------
         type (T_Predators), pointer                          :: ObjPredators
@@ -215,10 +215,10 @@ Module ModulePredators
         GetPredatorsIncreaseRate = ObjPredators%IncreaseRate
 
     end function GetPredatorsIncreaseRate
-    
+
     !--------------------------------------------------------------------------
-    
-    function GetPredatorsDecreaseRate (ObjPredators)
+
+    pure function GetPredatorsDecreaseRate (ObjPredators)
 
         !Arguments-------------------------------------------------------------
         type (T_Predators), pointer                          :: ObjPredators
@@ -231,9 +231,9 @@ Module ModulePredators
         GetPredatorsDecreaseRate = ObjPredators%DecreaseRate
 
     end function GetPredatorsDecreaseRate
-    
+
     !--------------------------------------------------------------------------
-    
+
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -248,7 +248,7 @@ Module ModulePredators
         type (T_Predators),  pointer                   :: ObjPredators
         real(8), intent(IN)                            :: PreyPopulationSize
         real(8), intent(IN)                            :: DT
-                                                    
+
         !Return------------------------------------------------------------------
         type (T_Predators), pointer                    :: ModifyPredatorsPopulation
 
@@ -269,12 +269,12 @@ Module ModulePredators
 
     !--------------------------------------------------------------------------
 
-    function Death(PredatorsPopulationSize, DecreaseRate, DT)
+    pure function Death(PredatorsPopulationSize, DecreaseRate, DT)
         !Arguments-------------------------------------------------------------
         real(8), pointer, intent(IN)                   :: PredatorsPopulationSize
         real(8), intent(IN)                            :: DecreaseRate
         real(8), intent(IN)                            :: DT
-                                                    
+
         !Return----------------------------------------------------------------
         real(8)                                        :: Death
 
@@ -290,13 +290,13 @@ Module ModulePredators
 
     !--------------------------------------------------------------------------
 
-    function Increase(PredatorsPopulationSize, IncreaseRate, PreyPopulationSize, DT)
+    pure function Increase(PredatorsPopulationSize, IncreaseRate, PreyPopulationSize, DT)
         !Arguments-------------------------------------------------------------
         real(8), pointer, intent(IN)                   :: PredatorsPopulationSize
         real(8), intent(IN)                            :: IncreaseRate
         real(8), intent(IN)                            :: PreyPopulationSize
         real(8), intent(IN)                            :: DT
-                                                    
+
         !Return----------------------------------------------------------------
         real(8)                                        :: Increase
 
@@ -321,12 +321,12 @@ Module ModulePredators
 
 
 
-    subroutine KillPredators(ObjPredators)
+    pure subroutine KillPredators(ObjPredators)
 
         !Arguments---------------------------------------------------------------
         type (T_Predators),     pointer                      :: ObjPredators
 
-        !Return------------------------------------------------------------------         
+        !Return------------------------------------------------------------------
 
         !External----------------------------------------------------------------
 
@@ -340,16 +340,14 @@ Module ModulePredators
         !------------------------------------------------------------------------
 
     end subroutine KillPredators
-        
 
     !------------------------------------------------------------------------
-    
-    
-    subroutine DeallocateInstance (ObjPredators)
+
+    pure subroutine DeallocateInstance (ObjPredators)
 
         !Arguments-------------------------------------------------------------
         type (T_Predators), pointer                          :: ObjPredators
-                                                    
+
         !Local-----------------------------------------------------------------
 
         !------------------------------------------------------------------------
@@ -359,16 +357,16 @@ Module ModulePredators
         deallocate (ObjPredators%IncreaseRate)
         deallocate (ObjPredators%DecreaseRate)
         deallocate (ObjPredators)
-            
+
     end subroutine DeallocateInstance
 
     !--------------------------------------------------------------------------
 
-    subroutine PredatorsGarbageCollector (ObjPredators)
+    pure subroutine PredatorsGarbageCollector (ObjPredators)
 
         !Arguments-------------------------------------------------------------
         type (T_Predators), pointer                          :: ObjPredators
-                                                    
+
         !Local-----------------------------------------------------------------
 
         !------------------------------------------------------------------------
@@ -376,7 +374,7 @@ Module ModulePredators
         !Partially deallocates instance
         deallocate (ObjPredators%PopulationSize)
         deallocate (ObjPredators)
-            
+
         !------------------------------------------------------------------------
 
     end subroutine PredatorsGarbageCollector

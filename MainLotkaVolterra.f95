@@ -11,7 +11,7 @@
 !------------------------------------------------------------------------------
 !
 !This program is free software; you can redistribute it and/or
-!modify it under the terms of the GNU General Public License 
+!modify it under the terms of the GNU General Public License
 !version 2, as published by the Free Software Foundation.
 !
 !This program is distributed in the hope that it will be useful,
@@ -24,7 +24,7 @@
 !Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 !
 !------------------------------------------------------------------------------
- 
+
 program MohidLotkaVolterra
 
     use ModulePrey
@@ -42,7 +42,7 @@ program MohidLotkaVolterra
     call ModifyLotkaVolterra
 
     contains
-    
+
     !--------------------------------------------------------------------------
 
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -64,7 +64,7 @@ program MohidLotkaVolterra
         call ASkQuestions     (ObjLotkaVolterra)
 
     end subroutine ConstructMohidLotkaVolterra
-    
+
     !--------------------------------------------------------------------------
 
     subroutine ASkQuestions (ObjLotkaVolterra)
@@ -83,20 +83,20 @@ program MohidLotkaVolterra
         read*,  ObjLotkaVolterra%NbrSteps
 
     end subroutine ASkQuestions
-    
+
     !--------------------------------------------------------------------------
 
     function StratPrey ()
 
         !Local-------------------------------------------------------------------
         real(8) :: IniPreyPopulation
-        
+
         real(8) :: PreyBirthRate
         real(8) :: PreyDestroyRate
 
         !Return----------------------------------------------------------------
         type (T_Prey), pointer                          :: StratPrey
-                                                    
+
         !----------------------------------------------------------------------
 
         print*, "What is the incial prey population?"
@@ -111,20 +111,20 @@ program MohidLotkaVolterra
         StratPrey => ConstructPrey (IniPreyPopulation, PreyBirthRate, PreyDestroyRate)
 
     end function StratPrey
-    
+
     !--------------------------------------------------------------------------
 
     function StratPredators ()
 
         !Local-----------------------------------------------------------------
         real(8) :: IniPredatorsPopulation
-        
+
         real(8) :: PredatorsIncreaseRate
         real(8) :: PredatorsDeathRate
-        
+
         !Return----------------------------------------------------------------
         type (T_Predators), pointer                          :: StratPredators
-                                                    
+
         !----------------------------------------------------------------------
 
         print*, "What is the incial predators population?"
@@ -139,10 +139,10 @@ program MohidLotkaVolterra
         StratPredators => ConstructPredators (IniPredatorsPopulation, PredatorsIncreaseRate, PredatorsDeathRate)
 
     end function StratPredators
-    
+
     !--------------------------------------------------------------------------
 
-    subroutine AllocateInstance (ObjLotkaVolterra)
+    pure subroutine AllocateInstance (ObjLotkaVolterra)
         !Arguments-------------------------------------------------------------
         type(T_LV), pointer :: ObjLotkaVolterra
 
@@ -151,7 +151,7 @@ program MohidLotkaVolterra
         allocate (ObjLotkaVolterra)
 
     end subroutine AllocateInstance
-    
+
     !--------------------------------------------------------------------------
 
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -164,7 +164,7 @@ program MohidLotkaVolterra
 
     !--------------------------------------------------------------------------
 
-    subroutine ModifyLotkaVolterra 
+    subroutine ModifyLotkaVolterra
 
         !Local-----------------------------------------------------------------
         type(T_LV),        pointer :: ObjLotkaVolterra
@@ -180,12 +180,12 @@ program MohidLotkaVolterra
         call Loop                        (ObjLotkaVolterra, ObjPrey, ObjPredators, ObjLotkaVolterra%NbrSteps)
 
     end subroutine ModifyLotkaVolterra
-    
+
     !--------------------------------------------------------------------------
 
     recursive subroutine Loop (ObjLotkaVolterra, ObjPrey, ObjPredators, NbrSteps)
-        
-        !Arguments-------------------------------------------------------------         
+
+        !Arguments-------------------------------------------------------------
         type(T_LV),        pointer :: ObjLotkaVolterra
         type(T_Prey),      pointer :: ObjPrey
         type(T_Predators), pointer :: ObjPredators
@@ -212,7 +212,7 @@ cd1 :   if (NbrSteps .LE. 0.0) then
             print*, NbrSteps, PreyPopulationSize, PredatorsPopulationSize
 !$OMP PARALLEL
 !$OMP SECTIONS
-!$OMP SECTION 
+!$OMP SECTION
             NewObjPrey      => ModifyPreyPopulation      (ObjPrey,      PredatorsPopulationSize, ObjLotkaVolterra%DT)
             call PreyGarbageCollector                    (ObjPrey)
 
@@ -221,12 +221,13 @@ cd1 :   if (NbrSteps .LE. 0.0) then
             call PredatorsGarbageCollector               (ObjPredators)
 !$OMP END SECTIONS NOWAIT
 !$OMP END PARALLEL
-        
+
+
             call Loop (ObjLotkaVolterra, NewObjPrey, NewObjPredators, NbrSteps - ObjLotkaVolterra%DT)
         end if cd1
-    
+
     end subroutine Loop
-    
+
     !--------------------------------------------------------------------------
 
     !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -239,7 +240,7 @@ cd1 :   if (NbrSteps .LE. 0.0) then
 
 
 
-    subroutine KillLotkaVolterra (ObjLotkaVolterra, ObjPrey, ObjPredators)
+    pure subroutine KillLotkaVolterra (ObjLotkaVolterra, ObjPrey, ObjPredators)
         !Arguments-------------------------------------------------------------
         type(T_LV),        pointer :: ObjLotkaVolterra
         type(T_Prey),      pointer :: ObjPrey
@@ -253,7 +254,7 @@ cd1 :   if (NbrSteps .LE. 0.0) then
         deallocate         (ObjLotkaVolterra)
 
     end subroutine KillLotkaVolterra
-    
+
     !--------------------------------------------------------------------------
 
 end program MohidLotkaVolterra
